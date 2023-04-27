@@ -14,6 +14,10 @@ public class Main {
         cart.addProduct(iPhone1);
         cart.addProduct(galaxy1);
 
+        cart.removeProduct(iPhone1);
+
+        cart.editQuantity(galaxy1);
+
         cart.printTotal();
     }
 }

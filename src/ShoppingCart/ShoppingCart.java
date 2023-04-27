@@ -10,8 +10,6 @@ public class ShoppingCart {
 
     private float subTotal = 0;
     private float salesTax = 0;
-    private float grandTotal = 0;
-    private int productQuantity = 0;
     private String shoppingCartName = "";
     private Scanner scanner = new Scanner(System.in);
     private HashMap<Product, Integer> cartMap = new HashMap<>();
@@ -38,15 +36,23 @@ public class ShoppingCart {
     }
 
     public void removeProduct(Product product){
-        if (productQuantity > 0) {
-            productQuantity--;
+        if (cartMap.get(product) > 0) {
+            cartMap.merge(product, -1, Integer::sum);
+            System.out.println("You currently have " + cartMap.get(product) +" "+ product.getProductName() + "'s in your cart.");
+        } else {
+            System.out.println("You currently have no " + product.getProductName() + "'s in your cart");
         }
-        System.out.println("Shopping cart Name: " + shoppingCartName + "Product quantity: " + productQuantity);
+
     }
 
-    public void editQuantity(){
-        int newQuantity = scanner.nextInt();
-
+    public void editQuantity(Product product){
+        int newQuantity;
+        do {
+            System.out.println("\n\nHow many " + product.getProductName() + "'s would you like? (Max 5)");
+            newQuantity = scanner.nextInt();
+        } while (newQuantity < 0 || newQuantity >5);
+        cartMap.put(product, newQuantity);
+        System.out.println("You currently have " + cartMap.get(product) +" "+ product.getProductName() + "'s in your cart.\n");
     }
 
     public void printTotal(){
@@ -57,12 +63,8 @@ public class ShoppingCart {
         }
         salesTax = (float) (subTotal * .1);
         System.out.println("Sales Tax: " + df.format(salesTax));
-        grandTotal = subTotal + salesTax;
+        float grandTotal = subTotal + salesTax;
         System.out.println("Grand Total: " + df.format(grandTotal));
-    }
-
-    public void setProductQuantity(int productQuantity) {
-        this.productQuantity = productQuantity;
     }
 
     public void setShoppingCartName(String shoppingCartName) {
@@ -75,10 +77,6 @@ public class ShoppingCart {
 
     public float getSalesTax() {
         return salesTax;
-    }
-
-    public int getProductQuantity() {
-        return productQuantity;
     }
 
     public String getShoppingCartName() {
